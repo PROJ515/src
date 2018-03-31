@@ -1,0 +1,9 @@
+<launch>
+
+<node name="joystick_node" pkg="joy" type="joy_node" />
+
+<node name="xboxdrv_node" pkg="xbox360_to_cmd_vel" type="xbox_ROS.sh" />
+
+<node name="xbox360_to_cmd_vel" pkg="xbox360_to_cmd_vel" type="xbox360_to_cmd_vel.py" />
+
+</launch>

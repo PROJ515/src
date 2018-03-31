@@ -1,0 +1,7 @@
+<launch>
+  <arg name="base" value="$(env ROS_GUMMI_BASE)" />
+  <arg name="moveit_controller_manager" default="moveit_simple_controller_manager/MoveItSimpleControllerManager" />
+  <param name="moveit_controller_manager" value="$(arg moveit_controller_manager)"/>
+  <!-- <param name="controller_manager_name" value="/" /> -->
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/controllers.yaml')"/>
+</launch>

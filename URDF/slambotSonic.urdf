@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<robot name="origins">
+  <link name="base_link">
+    <visual>
+     <geometry>
+        <box size="0.4 .9 .25"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="sonic_one">
+    <visual>
+      <geometry>
+        <box size="0.08 0.08 0.16"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.01"/>
+      <material name="green">
+        <color rgba="0 1 0 0.8"/>
+       </material>
+    </visual>
+  </link>
+
+  <joint name="base_to_sonic_one" type="fixed">
+    <parent link="base_link"/>
+    <child link="sonic_one"/>
+    <origin xyz="0 0.45 .14"/>
+  </joint>
+
+  <link name="left_front_wheel">
+    <visual>
+      <geometry>
+        <cylinder length=".04" radius="0.2"/>
+      </geometry>
+      <origin xyz="0 0 0.024"/>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="left_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_front_wheel"/>
+    <origin rpy="0 1.57075 0" xyz="0.2 0 -0.085"/>
+  </joint>
+
+  <link name="right_front_wheel">
+    <visual>
+      <geometry>
+        <cylinder length=".04" radius="0.2"/>
+      </geometry>
+      <origin xyz="0 0 -0.024"/>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="right_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_front_wheel"/>
+    <origin rpy="0 1.57075 0" xyz="-0.2 0 -0.085"/>
+  </joint>
+
+
+
+</robot>
+
+

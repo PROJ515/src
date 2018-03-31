@@ -1,0 +1,36 @@
+<launch>
+
+<arg name="moveit_ns" default="false"/>
+
+<arg name="debug" default="false" />
+
+<arg name="allow_trajectory_execution" default="true"/>
+
+<arg name="fake_execution" default="false"/>
+
+<arg name="info" default="$(arg debug)" />
+
+<arg name="max_safe_path_cost" default="1"/>
+<arg name="jiggle_fraction" default="0.05" />
+<arg name="publish_monitored_planning_scene" default="true"/>
+
+
+<group ns="moveit" unless="$(arg moveit_ns)">
+  <include file="$(find gummi_moveit)/launch/move_group_internals.launch.xml">
+    <arg name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <arg name="fake_execution" value="$(arg fake_execution)"/>
+    <arg name="info" value="$(arg info)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+</group>
+
+<group if="$(arg moveit_ns)">
+  <include file="$(find gummi_moveit)/launch/move_group_internals.launch.xml">
+    <arg name="allow_trajectory_execution" value="$(arg allow_trajectory_execution)"/>
+    <arg name="fake_execution" value="$(arg fake_execution)"/>
+    <arg name="info" value="$(arg info)"/>
+    <arg name="debug" value="$(arg debug)"/>
+  </include>
+</group>
+
+</launch>

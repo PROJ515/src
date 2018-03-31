@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--This does not replace URDF, and is not an extension of URDF.
+    This is a format for representing semantic information about the robot structure.
+    A URDF file must exist for this robot as well, where the joints and the links that are referenced are defined
+-->
+<robot
+  name="gummi" xmlns:xacro="http://www.ros.org/wiki/xacro">
+  <!--GROUPS: Representation of a set of joints and links. This can be useful for specifying DOF to plan for, defining arms, end effectors, etc-->
+  <!--LINKS: When a link is specified, the parent joint of that link (if it exists) is automatically included-->
+  <!--JOINTS: When a joint is specified, the child link of that joint (which will always exist) is automatically included-->
+  <!--CHAINS: When a chain is specified, all the links along the chain (including endpoints) are included in the group. Additionally, all the joints that are parents to included links are also included. This means that joints along the chain and the parent joint of the base link are included in the group-->
+  <!--SUBGROUPS: Groups can also be formed by referencing to already defined group names-->
+
+  <!-- Including the xacro files from base and end effector that containg the macros for each part of the srdf -->
+  <xacro:include filename="$(arg base)/xacro/gummi_base.srdf.xacro" />
+  <xacro:include filename="$(arg ee)/xacro/gummi_ee.srdf.xacro" />
+    <group name="right_arm">
+      <xacro:group_right_arm_base />
+        <xacro:group_right_arm_ee />
+    </group>
+    <xacro:group_right_gripper_ee />
+    <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
+    <group_state name="default" group="right_arm">
+      <xacro:group_state_right_arm_base />
+      <xacro:group_state_right_arm_ee />
+    </group_state>
+    <xacro:end_effector_ee />
+    <xacro:virtual_joints_base />
+    <xacro:disable_collisions_base />
+    <xacro:disable_collisions_ee />
+    <xacro:disable_collisions_mixed />
+</robot>

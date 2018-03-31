@@ -1,0 +1,13 @@
+digraph G {
+"world" -> "odom"[label="Broadcaster: /world_to_odom_broadcaster\nAverage rate: 38.644 Hz\nMost recent transform: 1494078030.221 ( -0.033 sec old)\nBuffer length: 4.994 sec\n"];
+"world" -> "map"[label="Broadcaster: /world_to_map_broadcaster\nAverage rate: 25.145 Hz\nMost recent transform: 1494078030.221 ( -0.033 sec old)\nBuffer length: 4.971 sec\n"];
+"laser" -> "base_link"[label="Broadcaster: /laser_to_base_broadcaster\nAverage rate: 25.144 Hz\nMost recent transform: 1494078030.219 ( -0.032 sec old)\nBuffer length: 4.971 sec\n"];
+"odom" -> "laser"[label="Broadcaster: /serial_node\nAverage rate: 19.432 Hz\nMost recent transform: 1494078030.157 ( 0.030 sec old)\nBuffer length: 4.940 sec\n"];
+"base_link" -> "ultrasound"[label="Broadcaster: /robot_state_publisher\nAverage rate: 50.196 Hz\nMost recent transform: 1494078030.672 ( -0.485 sec old)\nBuffer length: 4.961 sec\n"];
+"base_link" -> "left_front_wheel"[label="Broadcaster: /robot_state_publisher\nAverage rate: 50.196 Hz\nMost recent transform: 1494078030.672 ( -0.485 sec old)\nBuffer length: 4.961 sec\n"];
+"base_link" -> "right_front_wheel"[label="Broadcaster: /robot_state_publisher\nAverage rate: 50.196 Hz\nMost recent transform: 1494078030.672 ( -0.485 sec old)\nBuffer length: 4.961 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1494078030.187"[ shape=plaintext ] ;
+ }->"world";
+}

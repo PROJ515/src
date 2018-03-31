@@ -1,0 +1,15 @@
+<launch>
+  <!-- This file is specific for mayo base. The eval expression is superfluous and
+  it only makes sense to keep it, so that this can be adapted to other bases faster. -->
+  <arg name="base" value="$(env ROS_GUMMI_BASE)" />
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/gummi.yaml')" command="load"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/shoulder_roll.yaml')" command="load" ns="shoulder_roll"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/calibration_shoulder_roll.yaml')" command="load" ns="shoulder_roll/calib"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/shoulder_pitch.yaml')" command="load" ns="shoulder_pitch"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/calibration_shoulder_pitch.yaml')" command="load" ns="shoulder_pitch/calib"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/shoulder_yaw.yaml')" command="load" ns="shoulder_yaw"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/calibration_shoulder_yaw.yaml')" command="load" ns="shoulder_yaw/calib"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/elbow.yaml')" command="load" ns="elbow"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/calibration_elbow.yaml')" command="load" ns="elbow/calib"/>
+  <rosparam file="$(eval find('gummi_base_' + base) + '/config/upperarm_roll.yaml')" command="load" ns="upperarm_roll"/>
+</launch>

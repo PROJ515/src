@@ -1,0 +1,8 @@
+help from guy in football lab
+use rqt to make sure things are publishing (camera info, tick registered box)
+
+make sure depth w.h = rgb w.h
+
+depth matrix is 640x480
+look up relavent pixel
+have depth!

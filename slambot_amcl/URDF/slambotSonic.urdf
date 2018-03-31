@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<robot name="slambotSonic">
+  <link name="base_link">
+    <visual>
+     <geometry>
+        <box size="0.9 .45 .25"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <link name="ultrasound">
+    <visual>
+      <geometry>
+        <box size="0.08 0.08 0.16"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 -0.01"/>
+      <material name="green">
+        <color rgba="0 1 0 0.8"/>
+       </material>
+    </visual>
+  </link>
+
+  <joint name="base_to_ultrasound" type="fixed">
+    <parent link="base_link"/>
+    <child link="ultrasound"/>
+    <origin xyz="0.45 0 .14"/>
+  </joint>
+
+  <link name="left_front_wheel">
+    <visual>
+      <geometry>
+        <cylinder length=".04" radius="0.2"/>
+      </geometry>
+      <origin xyz="0 0 0.024"/>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="left_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="left_front_wheel"/>
+    <origin rpy="0 1.57075 1.57075" xyz="0 0.225 -0.085"/>
+  </joint>
+
+  <link name="right_front_wheel">
+    <visual>
+      <geometry>
+        <cylinder length=".04" radius="0.2"/>
+      </geometry>
+      <origin xyz="0 0 -0.024"/>
+      <material name="black"/>
+    </visual>
+  </link>
+
+  <joint name="right_front_wheel_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="right_front_wheel"/>
+    <origin rpy="0 1.57075 1.57075" xyz="0 -0.225 -0.085"/>
+  </joint>
+
+
+</robot>
+
+

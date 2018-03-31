@@ -1,0 +1,14 @@
+digraph G {
+node [shape=box];
+"base_link" [label="base_link"];
+"ultrasound" [label="ultrasound"];
+"left_front_wheel" [label="left_front_wheel"];
+"right_front_wheel" [label="right_front_wheel"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_link" -> "base_to_ultrasound" [label="xyz: 0.45 0 0.14 \nrpy: 0 -0 0"]
+"base_to_ultrasound" -> "ultrasound"
+"base_link" -> "left_front_wheel_joint" [label="xyz: 0 0.225 -0.085 \nrpy: 0 1.57075 1.57075"]
+"left_front_wheel_joint" -> "left_front_wheel"
+"base_link" -> "right_front_wheel_joint" [label="xyz: 0 -0.225 -0.085 \nrpy: 0 1.57075 1.57075"]
+"right_front_wheel_joint" -> "right_front_wheel"
+}

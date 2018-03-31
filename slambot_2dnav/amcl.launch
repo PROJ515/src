@@ -1,0 +1,58 @@
+<launch>
+  <master auto="start"/>
+
+<arg name="model" />
+      <arg name="gui" default="False" />
+      <param name="use_gui" value="$(arg gui)"/>
+      <param name="robot_description" textfile="$(find slambot_2dnav)/URDF/slambotSonic.urdf" />
+      <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+	<param name="publish_frequency" value="50"/>
+	</node>
+      <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" >
+	<param name="publish_frequency" value="50"/>
+	</node>
+
+
+ <arg name="tf_map_scanmatch_transform_frame_name" default="scanmatch_frame"/>
+  <arg name="base_frame" default="laser"/>
+  <arg name="odom_frame" default="laser"/>
+  <arg name="pub_map_odom_transform" default="true"/>
+  <arg name="scan_subscriber_queue_size" default="5"/>
+  <arg name="scan_topic" default="scan"/>
+  <arg name="map_size" default="1024"/>
+
+  <node name="map_server" pkg="map_server" type="map_server" args="/home/tom/maps/myMap1.pgm 0.050000"/>
+
+
+
+
+  <!--- Run AMCL -->
+  <include file="$(find amcl)/examples/amcl_diff.launch" />
+
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find slambot_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find slambot_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find slambot_2dnav)/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find slambot_2dnav)/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find slambot_2dnav)/base_local_planner_params.yaml" command="load" />
+  </node>
+<!--	<node pkg="tf" type="static_transform_publisher" name="scanmatcher_to_laser_broadcaster" args="0 0 0 0 0 0 scanmatcher_frame base_link 100" />-->      
+<!--        <node pkg="tf" type="static_transform_publisher" name="base_to_odom_broadcaster" args="0 0 0 0 0 0 base_link odom 100" /> -->
+        <node pkg="tf" type="static_transform_publisher" name="laser_to_base_broadcaster" args="0 0 0 0 0 0 laser base_link 40" />
+        <node pkg="tf" type="static_transform_publisher" name="world_to_odom_broadcaster" args="0 0 0 0 0 0 world odom 40" />
+        <node pkg="tf" type="static_transform_publisher" name="world_to_map_broadcaster" args="0 0 0 0 0 0 world map 40" />
+
+
+<!--THESE WORK:
+        <node pkg="tf" type="static_transform_publisher" name="laser_to_base_broadcaster" args="0 0 0 0 0 0 laser base_link 100" />
+        <node pkg="tf" type="static_transform_publisher" name="world_to_odom_broadcaster" args="0 0 0 0 0 0 world odom 100" />
+        <node pkg="tf" type="static_transform_publisher" name="world_to_map_broadcaster" args="0 0 0 0 0 0 world map 100" />
+-->
+
+<!--<node name="arduinoMotorController" pkg="rosserial_python" type="serial_node.py" args="/dev/ttyACM1" />-->
+
+</launch>
+
+
+
