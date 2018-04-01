@@ -135,12 +135,16 @@ void twoD_coordinate_callback(const darknet_ros_msgs::BoundingBoxes::ConstPtr& m
 			static tf::TransformBroadcaster br;
 			tf::Transform transform;
 			//transform.setOrigin( tf::Vector3(msg->x, msg->y, 0.0) );
-			transform.setOrigin( tf::Vector3(objectLocation.x, objectLocation.y, objectLocation.z) );
-			tf::Quaternion q;
-			q.setRPY(0.01, 0.01, 0.5);
-			transform.setRotation(q);
-			//br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", "testTF"));
-			br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", msg->boundingBoxes[i].Class.c_str()));
+			if ((objectLocation.x != NULL) && (objectLocation.y != NULL) && (objectLocation.z != NULL)){
+				transform.setOrigin( tf::Vector3(objectLocation.x, objectLocation.y, objectLocation.z) );
+				tf::Quaternion q;
+				q.setRPY(0.01, 0.01, 0.5);
+				transform.setRotation(q);
+				//br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", "testTF"));
+				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", msg->boundingBoxes[i].Class.c_str()));
+			} else {
+				ROS_WARNING("A Null value has been returned. The RGBD camera is probably looking up a point which is 'shadowed'. Need to fix this.");
+			}
 		} else {
 			ROS_INFO("Confidence less than %f\% \, object discarded.", confidence_threshold*100);
 			ROS_INFO("TF NOT SENT");
@@ -236,6 +240,7 @@ msec_t time_ms(void)
 }
 
 #endif
+
 
 
 
