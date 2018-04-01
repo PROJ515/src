@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   turtlesim
+  tf	
 )
 
 ## System dependencies are found with CMake's conventions
