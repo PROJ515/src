@@ -143,7 +143,7 @@ void twoD_coordinate_callback(const darknet_ros_msgs::BoundingBoxes::ConstPtr& m
 				//br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", "testTF"));
 				br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), "camera_depth_optical_frame", msg->boundingBoxes[i].Class.c_str()));
 			} else {
-				ROS_WARNING("A Null value has been returned. The RGBD camera is probably looking up a point which is 'shadowed'. Need to fix this.");
+				ROS_WARN("A Null value has been returned. The RGBD camera is probably looking up a point which is 'shadowed'. Need to fix this.");
 			}
 		} else {
 			ROS_INFO("Confidence less than %f\% \, object discarded.", confidence_threshold*100);
