@@ -1,3 +1,0 @@
-# we generate urdf and srdf files, so they will be ignored
-*.urdf
-*.srdf
