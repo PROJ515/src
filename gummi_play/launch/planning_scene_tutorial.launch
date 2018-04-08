@@ -1,0 +1,16 @@
+<launch>
+
+    <arg name="kinect" default="false"/>
+    <!-- send pr2 urdf to param server -->
+    <include file="$(find gummi_play)/launch/planning_context.launch">
+      <arg name="load_robot_description" value="true"/>
+    </include>
+
+
+  <node name="play_planning_scene_tutorial" pkg="gummi_play" type="play_planning_scene_tutorial" respawn="false" output="screen">
+    <rosparam command="load" file="$(find gummi_play)/config/kinematics.yaml"/>
+  </node>
+</launch>
+
+
+

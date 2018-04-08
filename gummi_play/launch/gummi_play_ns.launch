@@ -1,0 +1,14 @@
+<launch>
+
+<group ns="moveit">
+  <!--  this solves the error messages Moveit! was generating when the arm is not in a very stable position -->
+  <!-- <param name="move_group/trajectory_execution/allowed_start_tolerance" value="0.5" /> -->
+  <!--  not this parameter is set inside trajectory_execution.launch.xml-->
+
+  <!-- <node name="gummi_right_arm_controller" pkg="gummi_moveit" type="follow_joint_trajectory.py" output="screen"/> -->
+
+    <node name="gummi_play" pkg="gummi_play" type="gummi_play" respawn="false" output="screen">
+  </node>
+</group>
+
+</launch>

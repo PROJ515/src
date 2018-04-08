@@ -1,0 +1,10 @@
+<!-- -->
+<launch>
+
+<group ns="moveit">
+
+<node name="move_group_test_cpp_abdulla" pkg="gummi_play" type="move_group_test_cpp_abdulla" output="screen"/>
+
+</group>
+
+</launch>

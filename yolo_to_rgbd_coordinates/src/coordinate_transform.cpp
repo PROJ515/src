@@ -146,7 +146,7 @@ void twoD_coordinate_callback(const darknet_ros_msgs::BoundingBoxes::ConstPtr& m
 				ROS_WARN("A Null value has been returned. The RGBD camera is probably looking up a point which is 'shadowed'. Need to fix this.");
 			}
 		} else {
-			ROS_INFO("Confidence less than %f\% \, object discarded.", confidence_threshold*100);
+			ROS_INFO("Confidence less than %f%%, object discarded.", confidence_threshold*100);
 			ROS_INFO("TF NOT SENT");
 			// ROS_INFO("depth value at CofM = %f", depth_image[50]);//[y_cent]);
 		}
