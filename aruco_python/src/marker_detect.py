@@ -1,6 +1,14 @@
 import numpy as np
 import cv2
+import roslib
+import rospy
 
+from geometry_msgs.msg import Point
+
+
+pub = rospy.Publisher('marker_translation',Point, queue_size = 1)
+rospy.init_node('marker_detect')
+rate = rospy.Rate(50)
 cameraMatrix = np.array([[3.11921895e+03, 0.00000000e+00, 6.88348512e+02],
        [0.00000000e+00, 3.02218437e+03, 3.08658911e+02],
        [0.00000000e+00, 0.00000000e+00, 1.00000000e+00]])
@@ -20,7 +28,7 @@ while(True):
 
     rvecs=[]
     tvecs=[]
-
+    tvec = []
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     corners, ids, rejectedImgPoints = cv2.aruco.detectMarkers(gray, dictionary)
@@ -30,12 +38,17 @@ while(True):
     if len(corners) > 0:
         #frame = cv2.aruco.drawDetectedMarkers(frame,corners, ids)
         #print(corners)
-        rvecs, tvecs, other = cv2.aruco.estimatePoseSingleMarkers(corners, 6, cameraMatrix, distCoeffs)
+        rvecs, tvecs, other = cv2.aruco.estimatePoseSingleMarkers(corners, 0.635, cameraMatrix, distCoeffs)
         #print(ret)
         #print(rvecs)
         #print(tvecs)
         for x in range(len(tvecs)):
             frame = cv2.aruco.drawAxis(frame, cameraMatrix, distCoeffs, rvecs[x], tvecs[x], 5)
+
+            tvec = tvecs[x]
+            print tvec[0][0]
+            point_msg = Point(float(tvec[0][0]),float(tvec[0][1]),float(tvec[0][2]))
+            pub.publish(point_msg)
 
     # Our operations on the frame come here
 
