@@ -1,4 +1,4 @@
-/* First attempt at moving the gummi arm through code */
+	/* First attempt at moving the gummi arm through code */
 /* Author: The Queenmeister */
 
 #include <moveit/move_group_interface/move_group_interface.h>
@@ -21,6 +21,8 @@
 float dataX, dataY, dataZ, dataW;
 bool flags = false;
 bool homeFlag = false;
+bool joint_space_home_flag = false;
+bool reach_flag = false;
 void instruction_cb(const geometry_msgs::Quaternion::ConstPtr& msg){
 	ROS_INFO("x: %f y: %f z: %f w: %f", msg->x, msg->y, msg->z, msg->w);
 	dataX = msg->x;
@@ -32,6 +34,15 @@ void instruction_cb(const geometry_msgs::Quaternion::ConstPtr& msg){
 		homeFlag = true;
 		flags = false;
 	}
+	if (dataW == 3.0){
+		joint_space_home_flag = true;
+		flags = false;
+	}
+
+	if (dataW == 4.0){
+		reach_flag = true;
+		flags = false;
+	}
 }
 
 
@@ -39,10 +50,16 @@ void instruction_cb(const geometry_msgs::Quaternion::ConstPtr& msg){
 float scaler = 0.001;
 void joy_callback(const sensor_msgs::Joy::ConstPtr& joy_msg ){
 
-	if (ros::param::getCached("movement_scaler", scaler)) {
-		ROS_INFO("Parameter \"Movement scaler\" set to: %f", scaler);
-	}
 
+	//Check to see whether parameter has been changed (non-cached, doesn't load master but takes longer to execute)
+        float scalerCheck = scaler;
+	if (ros::param::get("movement_scaler", scaler)){
+		if (scalerCheck != scaler){
+			ROS_INFO("Parameter \"Movement scaler\" set to: %f", scaler);
+		}
+	}
+	
+	//If 'start' has been pressed on the controller, accept input
 	if (joy_msg->buttons[8] == 1){
 		dataX = scaler*joy_msg->axes[0];
 		dataZ = scaler*joy_msg->axes[1];
@@ -54,11 +71,46 @@ void joy_callback(const sensor_msgs::Joy::ConstPtr& joy_msg ){
 		dataZ = 0.0;
 		// flags = true;
 	}
+
+	//If 'A' has been pressed on the controller, go home (ee space)
 	if ( joy_msg->buttons[0] == 1){
 		homeFlag = true;
 	}
 
+	//If 'C' has been pressed on the controller, go home (joint space)
+	if ( joy_msg->buttons[3] == 1){
+		joint_space_home_flag = true;
+	}
+	//If 'something' has been pressed on the controller, go home (joint space)
+	if ( joy_msg->buttons[2] == 1){
+		reach_flag = true;
+	}
+
 }
+
+std::vector<double> joint_space_home(void){
+	std::vector<double> joint_group_positions;
+	joint_group_positions.push_back(-0.542007);
+	joint_group_positions.push_back(0.245437);
+	joint_group_positions.push_back(-0.102265);
+	joint_group_positions.push_back(-0.538427);
+	joint_group_positions.push_back(-0.311909);
+	joint_group_positions.push_back(0.0444854);
+	joint_group_positions.push_back(0.0715858);
+	return joint_group_positions;
+}
+
+
+geometry_msgs::Pose reach_pose(void){
+	//- Translation: [0.470, -0.303, 0.113]
+	geometry_msgs::Pose target_position;
+	target_position.orientation.w = 1.0;
+	target_position.position.x = 0.470;
+	target_position.position.y = -0.303;
+	target_position.position.z = 0.113;
+	return(target_position);
+}
+
 int main(int argc, char **argv)
 {
 	ros::init(argc, argv, "move_group_interface_tutorial");
@@ -94,7 +146,66 @@ int main(int argc, char **argv)
 	const robot_state::JointModelGroup *joint_model_group =
 		move_group.getCurrentState()->getJointModelGroup(PLANNING_GROUP);
 
-	ROS_INFO("Planning for home...");
+
+/*
+
+ extra dummy link to your URDF.
+[ INFO] [1523276274.297842866]: Ready to take commands for planning group right_arm.
+-0.542007 0.245437 -0.102265 -0.538427 -0.311909 0.0444854 0.0715858 [ INFO] [1523276274.606088233]: Planning for home...
+[ INFO] [1523276274.653048641]: About to move home...
+
+
+*/
+
+//get joint-space state
+	  moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+	//
+	// Next get the current set of joint values for the group.
+	//  std::vector<double> joint_group_positions;
+	//  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+	//for (std::vector<double>::const_iterator i = joint_group_positions.begin(); i != joint_group_positions.end(); ++i){
+	//	std::cout << *i << ' ';
+	//}
+//state got
+	// Now, let's modify one of the joints, plan to the new joint space goal and visualize the plan.
+	// ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	//
+	// Let's set a joint space goal and move towards it.  This will replace the
+	// pose target we set above.
+	//
+	// To start, we'll create an pointer that references the current robot's state.
+	// RobotState is the object that contains all the current position/velocity/acceleration data.
+	//  moveit::core::RobotStatePtr current_state = move_group.getCurrentState();
+	//
+	// Next get the current set of joint values for the group.
+	//  std::vector<double> joint_group_positions;
+	//  current_state->copyJointGroupPositions(joint_model_group, joint_group_positions);
+
+	// Now, let's modify one of the joints, plan to the new joint space goal and visualize the plan.
+	//  joint_group_positions[0] = -1.0;  // radians
+	//  move_group.setJointValueTarget(joint_group_positions);
+
+	//  success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+	//  ROS_INFO_NAMED("tutorial", "Visualizing plan 2 (joint space goal) %s", success ? "" : "FAILED");
+	//   ROS_INFO("About to move...");
+	//   move_group.move();
+	//   ROS_INFO("Moved!?");
+	// Visualize the plan in Rviz
+	//visual_tools.deleteAllMarkers();
+	//visual_tools.publishText(text_pose, "Joint Space Goal", rvt::WHITE, rvt::XLARGE);
+	//visual_tools.publishTrajectoryLine(my_plan.trajectory_, joint_model_group);
+	//visual_tools.trigger();
+	//visual_tools.prompt("next step");
+	/*
+	moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+	move_group.setJointValueTarget(joint_space_home());
+	bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+	ROS_INFO("About to move...");
+	move_group.move();
+	ROS_INFO("Moved!?");*/
+//-0.542007 0.245437 -0.102265 -0.538427 -0.311909 0.0444854 0.0715858 [ INFO] [1523276274.606088233]: Planning for home...
+
+	//ROS_INFO("Planning for home...");
 	geometry_msgs::Pose target_pose1;
 	target_pose1.orientation.w = 1.0;
 	target_pose1.position.x = 0.243;
@@ -147,7 +258,25 @@ int main(int argc, char **argv)
 			ROS_INFO("Moved!?");
 			homeFlag = false;
 		}
+		if (joint_space_home_flag){
+			move_group.setJointValueTarget(joint_space_home());
+			bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+			ROS_INFO("About to move...");
+			move_group.move();
+			ROS_INFO("Moved!?");
+			joint_space_home_flag = false;
+		}
+		if (reach_flag){
+			move_group.setPoseTarget(reach_pose());
 
+			moveit::planning_interface::MoveGroupInterface::Plan my_plan;
+
+			bool success = (move_group.plan(my_plan) == moveit::planning_interface::MoveItErrorCode::SUCCESS);
+			ROS_INFO("About to move home...");
+			move_group.move();
+			ROS_INFO("Moved!?");
+			reach_flag = false;
+		}
 		ros::spinOnce();
 		loop_rate.sleep();
 	}
