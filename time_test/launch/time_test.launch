@@ -1,0 +1,10 @@
+<launch>
+
+
+	<node name="time_test_node_a" pkg="time_test" type="time_test_node_a" respawn="false" output="screen"/>
+	<node name="time_test_node_b" pkg="time_test" type="time_test_node_b" respawn="false" output="screen"/>
+
+
+
+</launch>
+
