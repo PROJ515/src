@@ -1,0 +1,13 @@
+<launch>
+
+	<!--group ns="headcam_fiducial"-->
+	<node name="headcam_fiducial" pkg="princess_control" type="marker_detect.py" respawn="false" output="screen">
+
+
+	<rosparam command="load" file="$(eval find('princess_control') + '/config/headcam_parameters.yaml')"/>
+	</node>
+	<!--node name="headcam_object_saver" pkg="princess_control" type="headcam_object_saver" respawn="false" output="screen"/-->
+	<!--/group-->
+	<node name="bag_functions" pkg="princess_control" type="bag_functions.py" respawn="false" output="screen"/>
+
+</launch>
